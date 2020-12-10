@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './login.css'
 import { Form, Input, Button, Checkbox } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, HomeOutlined } from '@ant-design/icons';
 
 
 class login extends Component {
@@ -10,20 +10,56 @@ class login extends Component {
         super(props);
         this.state = {
             type: 0,
+            userTelephone: '',
+            userPassword: '',
+            userCode: '',
+            userAccount: '',
         }
+    }
+
+    usertelephoneCheck(e) {
+        this.setState({
+            userTelephone: e.target.value, 
+        })
+    }
+    userpasswordCheck(e) {
+        this.setState({
+            userPassword: e.target.value,
+        })
+    }
+    usercodeCheck(e) {
+        this.setState({
+            userCode: e.target.value,
+        })
+    }
+    useraccountCheck(e) {
+        this.setState({
+            userAccount: e.target.value,
+        })
     }
 
     handleSubmit=e=>{
         this.formRef.current.validateFields()
                 .then(values => {
                     this.formRef.current.resetFields();
-                    
-                    
+                    this.goToLink(this);
                 })
                 .catch(info=>{
                   console.log('Validate failed:', info);
                 })
     }
+
+    goToLink() {
+        if (this.state.userTelephone === '15000000000' && this.state.userPassword === '123') {
+            this.props.history.push('/admin/homepage')
+        } else if (this.state.userCode === '123456' && this.state.userAccount === 'admin' && this.state.userPassword === '123') {
+            this.props.history.push('/admin/homepage')
+        } else {
+            alert('请输入正确的登录信息！')
+        }
+    }
+
+    formRef = React.createRef();
 
     loginType() {
         if (this.state.type === 0)
@@ -40,7 +76,7 @@ class login extends Component {
         return (
             <Form ref={this.formRef}
                       name='normal_login'
-                      className='login-area'
+                      className='login-area-telephone'
                       initialValues={{
                           remember: true,
                       }}
@@ -54,7 +90,12 @@ class login extends Component {
                                 },
                             ]}
                         >
-                        <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='手机号'/>
+                        <Input 
+                          prefix={<UserOutlined className='site-form-item-icon' />} 
+                          placeholder='手机号'
+                          value={this.state.userTelephone}
+                          onChange={this.usertelephoneCheck.bind(this)}
+                          />
                         </FormItem>
                         <FormItem
                             name='password'
@@ -65,7 +106,13 @@ class login extends Component {
                                 },
                             ]}
                         >
-                        <Input prefix={<LockOutlined className='site-form-item-icon' />} type='password' placeholder='密码'/>
+                        <Input 
+                          prefix={<LockOutlined className='site-form-item-icon' />} 
+                          type='password' 
+                          placeholder='密码'
+                          value={this.state.userPassword}
+                          onChange={this.userpasswordCheck.bind(this)}
+                          />
                         </FormItem>
                         <FormItem>
                         <Button type='primary' onClick={this.handleSubmit} className='login-button'>登录</Button>
@@ -81,7 +128,7 @@ class login extends Component {
         return(
             <Form ref={this.formRef}
                       name='normal_login'
-                      className='login-area'
+                      className='login-area-account'
                       initialValues={{
                           remember: true,
                       }}
@@ -95,7 +142,12 @@ class login extends Component {
                                 },
                             ]}
                         >
-                        <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='工厂代码'/>
+                        <Input 
+                          prefix={<HomeOutlined className='site-form-item-icon' />} 
+                          placeholder='工厂代码'
+                          value={this.state.userCode}
+                          onChange={this.usercodeCheck.bind(this)}
+                          />
                         </FormItem>
                         <FormItem
                             name='account'
@@ -106,7 +158,12 @@ class login extends Component {
                                 },
                             ]}
                         >
-                        <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='账号'/>
+                        <Input 
+                          prefix={<UserOutlined className='site-form-item-icon' />} 
+                          placeholder='账号'
+                          value={this.state.userAccount}
+                          onChange={this.useraccountCheck.bind(this)}
+                          />
                         </FormItem>
                         <FormItem
                             name='password'
@@ -117,7 +174,13 @@ class login extends Component {
                                 },
                             ]}
                         >
-                        <Input prefix={<LockOutlined className='site-form-item-icon' />} type='password' placeholder='密码'/>
+                        <Input 
+                          prefix={<LockOutlined className='site-form-item-icon' />} 
+                          type='password' 
+                          placeholder='密码'
+                          value={this.state.userPassword}
+                          onChange={this.userpasswordCheck.bind(this)}
+                          />
                         </FormItem>
                         <FormItem>
                         <Button type='primary' onClick={this.handleSubmit} className='login-button'>登录</Button>

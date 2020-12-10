@@ -9,6 +9,7 @@ import { loginRoutes } from './routes/index'
 ReactDOM.render(
   <Router>
     <Switch>
+      <Route path='/admin' render={routeProps=><App {...routeProps} />}/>
       {loginRoutes.map(route => {
         return <Route key={route.path} {...route} />
       })}
