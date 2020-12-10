@@ -26,13 +26,13 @@ class login extends Component {
     }
 
     loginType() {
-        if (this.type === 0)
+        if (this.state.type === 0)
         {
-            this.telephoneLogin()
+            return this.telephoneLogin()
         }
-        if (this.type === 1)
+        if (this.state.type === 1)
         {
-            this.accountLogin()
+            return this.accountLogin()
         }
     }
 
@@ -141,14 +141,14 @@ class login extends Component {
                     </div>
                     <div className='login-content'>
                         <div className='login-type'>
-                            <div 
+                            <a 
                               onClick={()=>{this.setState({type: 0})}} 
-                              style={this.type === 0 ? {color:'blue'}:{}}>
-                              手机号登录</div>
-                            <div 
+                              style={this.state.type === 0 ? {color:'blue'}:{}}>
+                              手机号登录</a>
+                            <a 
                               onClick={()=>{this.setState({type: 1})}}
-                              style={this.type === 1 ? {color:'blue'}:{}}>
-                              工厂账号登录</div>
+                              style={this.state.type === 1 ? {color:'blue'}:{}}>
+                              工厂账号登录</a>
                         </div>
                         {this.loginType()}
                     </div>
