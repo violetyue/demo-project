@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './login.css'
 import { Form, Input, Button, Checkbox } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
+import 'antd/dist/antd.css';
 import { UserOutlined, LockOutlined, HomeOutlined } from '@ant-design/icons';
 
 
@@ -70,6 +71,7 @@ class login extends Component {
         {
             return this.accountLogin()
         }
+        
     }
 
     telephoneLogin=()=> {
