@@ -3,11 +3,13 @@ import './App.css';
 import Reacr, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { mainRoutes } from './routes/index'
+import Frame from './layout/layout'
 
 
 function App() {
   return (
     <div>
+      <Frame>
       <div className='App'>
           <Switch>
           {
@@ -24,6 +26,7 @@ function App() {
           }
           </Switch>
         </div>
+        </Frame>
     </div>
   );
 }

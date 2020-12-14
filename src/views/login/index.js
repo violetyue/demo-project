@@ -18,6 +18,14 @@ class login extends Component {
         }
     }
 
+    componentDidMount() {
+        const userTelephone = localStorage.userTelephone
+        const userCode = localStorage.userCode
+        if (userTelephone === '15000000000' || userCode === '123123') {
+          this.goToLink()
+        }
+    }
+
     usertelephoneCheck(e) {
         this.setState({
             userTelephone: e.target.value, 
@@ -51,12 +59,18 @@ class login extends Component {
     }
 
     goToLink() {
-        if (this.state.userTelephone === '15000000000' && this.state.userPassword === '123') {
+        if(localStorage.userTelephone = '15000000000'){
             this.props.history.push('/admin/homepage')
-        } else if (this.state.userCode === '123456' && this.state.userAccount === 'admin' && this.state.userPassword === '123') {
+        } else if (localStorage.userCode === '123123'){
             this.props.history.push('/admin/homepage')
         } else {
-            alert('请输入正确的登录信息！')
+            if (this.state.userTelephone === '15000000000' && this.state.userPassword === '123') {
+                this.props.history.push('/admin/homepage')
+            } else if (this.state.userCode === '123456' && this.state.userAccount === 'admin' && this.state.userPassword === '123') {
+                this.props.history.push('/admin/homepage')
+            } else {
+                alert('请输入正确的登录信息！')
+            }
         }
     }
 

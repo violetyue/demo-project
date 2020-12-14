@@ -16,6 +16,7 @@ ReactDOM.render(
     </Switch>
     <Redirect to='/login' from='/' />
   </Router>,
+  
   document.getElementById('root')
 );
 
