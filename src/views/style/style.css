@@ -1,0 +1,65 @@
+.searchwuliao, 
+.searchgongxu,
+.searchdanwei,
+.searchcipin,
+.searchyonghu {
+    padding: 10px;
+    margin: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.createwuliao, 
+.creategongxu,
+.createdanwei,
+.createcipin,
+.createyonghu {
+    padding: 10px;
+    margin: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.wuliaotable, 
+.gongxutable,
+.danweitable,
+.cipintable,
+.yonghutable {
+    padding: 10px;
+    margin: 15px; 
+}
+
+.createwuliaopage,
+.creategongxupage {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 15px;
+    width: 30%;
+}
+
+.createwuliaotitle,
+.creategongxutitle {
+    padding-bottom: 15px;
+    margin: 5px;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 25px;
+    font-weight: 400;
+}
+
+.createwuliaoarea,
+.creategongxuarea {
+    padding-left: 50px;
+    
+}
+
+.createwuliaobutton,
+.creategongxubutton {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 70px;
+}
+

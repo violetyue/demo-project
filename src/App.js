@@ -9,6 +9,7 @@ import Frame from './layout/layout'
 function App() {
   return (
     <div>
+    
       <Frame>
       <div className='App'>
           <Switch>
@@ -27,6 +28,7 @@ function App() {
           </Switch>
         </div>
         </Frame>
+         
     </div>
   );
 }

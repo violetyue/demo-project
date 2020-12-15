@@ -6,7 +6,7 @@ class gongdan extends Component {
     render() { 
         return (
             <div>
-                
+                gongdan
             </div>
         );
     }

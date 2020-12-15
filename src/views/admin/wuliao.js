@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { Input, Button, Table } from 'antd';
+import { Input, Button, Table, Space } from 'antd';
 import {
     SearchOutlined,
     PlusCircleOutlined,
 } from '@ant-design/icons';
-import '../style/wuliao.css'
+import '../style/style.css'
+import 'antd/dist/antd.css';
 
 class wuliao extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             columns: [{
                 title: '序号',
@@ -38,11 +39,18 @@ class wuliao extends Component {
                 title: '操作',
                 dataIndex: 'delete',
                 key: 'delete',
-                render: (text,record,index) => <a data-index={index} onClick={this.deleteItem.bind(this,text,record,index)}>Delete</a>
+                render: (text,record,index) => 
+                (
+                  <Space>
+                    <a data-index={index}>编辑</a>  
+                    <a data-index={index} onClick={this.deleteItem.bind(this,text,record,index)}>Delete</a>
+                  </Space>
+                )
             }],
             data: [],
         }
     }
+    
     render() { 
         let data = this.state.data
         let columns = this.state.columns
@@ -65,7 +73,11 @@ class wuliao extends Component {
                     <Button type='primary' icon={<SearchOutlined />}>查询</Button>
                 </div>
                 <div className='createwuliao'>
-                    <Button type='primary' icon={<PlusCircleOutlined />}>创建物料</Button>
+                    <Button 
+                      type='primary' 
+                      icon={<PlusCircleOutlined />}
+                      onClick={()=>{this.props.history.push("/admin/wuliaocreate")}}
+                    >创建物料</Button>
                 </div>
                 <div className='wuliaotable'>
                     <Table columns={columns} dataSource={data} />

@@ -15,8 +15,6 @@ import './layout.css'
 const { Sider, Content, Header } = Layout
 const { SubMenu } = Menu
 
-
-
 function layout(props) {
     const logout = ( 
         <Menu>
@@ -33,7 +31,9 @@ function layout(props) {
         // ) : (
         //   <Link to={paths.join("/")}>{route.breadcrumbName}</Link>
         // );
-        return(<span>{route.breadcrumbName}</span>)
+        if (props.children._owner.pendingProps.location.pathname === route.path) {
+            return(<span>{route.breadcrumbName}</span>)
+        }
       }
     
       
@@ -56,12 +56,17 @@ function layout(props) {
                     <SubMenu key='sub2' icon={<ReadOutlined />} title='基础数据'>
                         <Menu.Item key='3'><Link to="/admin/wuliao">物料</Link></Menu.Item>
                         <Menu.Item key='4'><Link to="/admin/gongxu">工序</Link></Menu.Item>
+                        <Menu.Item key='5'><Link to="/admin/danwei">单位</Link></Menu.Item>
+                        <Menu.Item key='6'><Link to="/admin/cipin">次品项</Link></Menu.Item>
+                    </SubMenu>
+                    <SubMenu key='sub3' icon={<LaptopOutlined />} title='系统配置'>
+                        <Menu.Item key='7'><Link to="/admin/yonghu">用户</Link></Menu.Item>
                     </SubMenu>
                 </Menu>
             </Sider>
             <Layout className='container'>
-                <Header className='site-header'>
-                <Breadcrumb itemRender={itemRender} routes={routes} />
+                <Header className='site-header'>               
+                    <Breadcrumb className='site-breadcrumb' itemRender={itemRender} routes={routes} />
                     <Dropdown overlay={logout}>
                         <div>
                             <UserOutlined />
