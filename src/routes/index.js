@@ -1,4 +1,4 @@
-import login from "../views/login/index";
+import Login from "../views/login/index";
 import homepage from "../views/admin/homepage";
 import gongdan from "../views/admin/gongdan";
 import wuliao from "../views/admin/wuliao";
@@ -13,7 +13,7 @@ import gongxucreate from "../views/admin/gongxucreate";
 export const loginRoutes= [
     {
         path: "/login",
-        component: login
+        component: Login
     }
 ]
 

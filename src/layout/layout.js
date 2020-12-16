@@ -18,7 +18,13 @@ const { SubMenu } = Menu
 function layout(props) {
     const logout = ( 
         <Menu>
-            <Menu.Item key='logOut'><Link to="/login">退出</Link></Menu.Item>
+            <Menu.Item key='logOut'>
+                <Link 
+                  to="/login" 
+                  onClick={()=>{localStorage.removeItem('auth')}}
+                >退出
+                </Link>
+            </Menu.Item>
         </Menu>
     )
   

@@ -6,6 +6,7 @@ import {
     SearchOutlined,
 } from '@ant-design/icons';
 import '../style/style.css'
+import { addUser, getUserInfo } from '../../api/index'
 
 const { Option } = Select
 
@@ -18,19 +19,19 @@ class yonghu extends Component {
                 dataIndex: 'sqno',
             }, {
                 title: '账号',
-                dataIndex: 'account',
+                dataIndex: 'username',
             }, {
                 title: '姓名',
                 dataIndex: 'name',
             }, {
                 title: '手机号',
-                dataIndex: 'telephone',
+                dataIndex: 'phone',
             }, {
                 title: '角色',
                 dataIndex: 'role',
             }, {
                 title: '虚拟账户',
-                dataIndex: 'virtual',
+                dataIndex: 'fake',
             }, {
                 title: '状态',
                 dataIndex: 'status',
@@ -48,9 +49,15 @@ class yonghu extends Component {
             }],
             data: [],
             modalAddInfoVisible: false,
+            username: '',
+            name: '',
+            phone: '',
+            fake: false,
+            roleIds: [0],
         }
     }
 
+    
     openModalAddInfo = (type)=>{
         this.setState({modalAddInfoVisible: true})
     }
@@ -59,15 +66,56 @@ class yonghu extends Component {
         this.formRef.current.validateFields()
                 .then(values => {
                     this.formRef.current.resetFields();
-                    
+                    this.addNewuser(this);
                     this.setState({modalAddInfoVisible: false});
                 })
                 .catch(info=>{
                   console.log('Validate failed:', info);
                 })
     }
+
+    componentDidMount() {
+        
+    }
+
+    
+
+    addNewuser() {
+        const data={}
+        data.username=this.state.username
+        data.name=this.state.name
+        data.phone=this.state.phone
+        data.fake=this.state.fake
+        data.roleIds=this.state.roleIds
+        addUser(data).then(res=>{
+            const { data } = res
+            localStorage.setItem("auth", data)
+            console.log(data)
+        })
+    }
     
     formRef = React.createRef();
+
+    usernameInput(e) {
+      this.setState({
+        username: e.target.value,
+      })
+    }
+    nameInput(e) {
+      this.setState({
+        name: e.target.value,
+      })
+    }
+    phoneInput(e) {
+      this.setState({
+        phone: e.target.value,
+      })
+    }
+    // fakeSelect(e) {
+    //   this.setState({
+    //     fake: e.target.value,
+    //   })
+    // }
 
     render() { 
         let data = this.state.data
@@ -111,7 +159,10 @@ class yonghu extends Component {
                                 },
                               ]}
                             >
-                            <Input placeholder="请填写"/>
+                            <Input 
+                              placeholder="请填写"
+                              value={this.state.username}
+                              onChange={this.usernameInput.bind(this)} />
                             </FormItem>
                             <FormItem
                               name='yonghuname'
@@ -123,13 +174,19 @@ class yonghu extends Component {
                                 },
                               ]}
                             >
-                            <Input placeholder="请填写"/>
+                            <Input 
+                              placeholder="请填写"
+                              value={this.state.name}
+                              onChange={this.nameInput.bind(this)}/>
                             </FormItem>
                             <FormItem
                               name='yonghutelephone'
                               label='手机号 '
                             >  
-                            <Input placeholder="请填写"/>
+                            <Input 
+                              placeholder="请填写"
+                              value={this.state.phone}
+                              onChange={this.phoneInput.bind(this)}/>
                             </FormItem>
                             <FormItem
                               name='yonnghurole'
@@ -145,20 +202,24 @@ class yonghu extends Component {
                               mode="multiple"
                               allowClear
                               placeholder="请选择"
+                              // value={this.state.roleIds}
                             >
-                                <Option value="admin1">轻量-管理员</Option>
-                                <Option value="admin2">轻量-计划员</Option>
-                                <Option value="admin3">轻量-生产人员</Option>
-                                <Option value="admin4">用户账号管理员</Option>
+                                <Option value="1">轻量-管理员</Option>
+                                <Option value="2">轻量-计划员</Option>
+                                <Option value="3">轻量-生产人员</Option>
+                                <Option value="4">用户账号管理员</Option>
                             </Select>
                             </FormItem>
                             <FormItem
                               name='yonghuvirtual'
                               label='虚拟用户 '
                             >  
-                            <Select defaultValue="no">
-                                <Option value="yes">是</Option>
-                                <Option value="no">否</Option>
+                            <Select 
+                              // value={this.state.fake}
+                              // onChange={this.fakeSelect.bind(this)}
+                            >
+                                <Option value={true}>是</Option>
+                                <Option value={false}>否</Option>
                             </Select>
                             </FormItem>
                         </Form>    

@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
+import { login } from '../../api/index'
+import JsSha from 'jssha';
 
-import layout from '../../layout/layout';
-
-const element = <layout name="主页"/>
+export const hashPassword = (password) => {
+    const sha = new JsSha('SHA3-224', 'TEXT');
+    sha.update(password);
+    return sha.getHash('HEX');
+};
 
 class homepage extends Component {
+
     
+
     render() { 
         return (
             <div>

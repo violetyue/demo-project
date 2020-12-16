@@ -4,9 +4,16 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import 'antd/dist/antd.css';
 import { UserOutlined, LockOutlined, HomeOutlined } from '@ant-design/icons';
+import { login } from '../../api/index'
+import JsSha from 'jssha';
 
+export const hashPassword = (password) => {
+    const sha = new JsSha('SHA3-224', 'TEXT');
+    sha.update(password);
+    return sha.getHash('HEX');
+};
 
-class login extends Component {
+class Login extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -19,10 +26,8 @@ class login extends Component {
     }
 
     componentDidMount() {
-        const userTelephone = localStorage.userTelephone
-        const userCode = localStorage.userCode
-        if (userTelephone === '15000000000' || userCode === '123123') {
-          this.goToLink()
+        if (localStorage.getItem('auth')) {
+            this.props.history.push('/admin/homepage')
         }
     }
 
@@ -59,19 +64,18 @@ class login extends Component {
     }
 
     goToLink() {
-        if(localStorage.userTelephone = '15000000000'){
+        const data={}
+        data.type=this.state.type
+        data.code=this.state.userCode
+        data.username=this.state.userAccount
+        data.phone=this.state.userTelephone
+        data.password=hashPassword(this.state.userPassword)
+        login(data).then(res=>{
+            const { data } = res
+            localStorage.setItem("auth", data)
+            console.log(data)
             this.props.history.push('/admin/homepage')
-        } else if (localStorage.userCode === '123123'){
-            this.props.history.push('/admin/homepage')
-        } else {
-            if (this.state.userTelephone === '15000000000' && this.state.userPassword === '123') {
-                this.props.history.push('/admin/homepage')
-            } else if (this.state.userCode === '123456' && this.state.userAccount === 'admin' && this.state.userPassword === '123') {
-                this.props.history.push('/admin/homepage')
-            } else {
-                alert('请输入正确的登录信息！')
-            }
-        }
+        })
     }
 
     formRef = React.createRef();
@@ -239,4 +243,4 @@ class login extends Component {
     }
 }
 
-export default login;
+export default Login;
