@@ -100,18 +100,18 @@ export function addUser(data) {
 
 //单位
 
-export function searchUnit(data) {
-    return post('/v1/unit/_search', data);
+export function getUnitList (data){ 
+    return post('liteman/v1/unit/_search', data);
 }
 
-export function updateUnit(data) {
-    return post('/v1/unit/_update', data);
+export function compileUnit(data) {
+    return post('liteman/v1/unit/_update', data);
 }
 
-export function inseartUnit(data) {
-    return post('/v1/unit/_insert', data)
+export function insertUnit(data) {
+    return post('liteman/v1/unit/_insert', data)
 }
 
-export function deleteUnit(data) {
-    return deleted('/v1/unit/{id}/_delete', data)
+export function deleteUnit(id) {
+    return deleted('liteman/v1/unit/${id}/_delete')
 }
