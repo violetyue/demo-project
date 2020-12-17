@@ -92,6 +92,9 @@ class yonghu extends Component {
             localStorage.setItem("auth", data)
             console.log(data)
         })
+        getUserInfo().then(res=>{
+          console.log(res)
+      })
     }
     
     formRef = React.createRef();

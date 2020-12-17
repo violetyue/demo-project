@@ -7,6 +7,7 @@ import {
     PlusCircleOutlined,
 } from '@ant-design/icons';
 import '../style/style.css'
+import { inseartUnit, deleteUnit } from '../../api/index'
 
 const { TextArea } = Input
 
@@ -17,6 +18,9 @@ class danwei extends Component {
             columns: [{
                 title: '序号',
                 dataIndex: 'sqno',
+                key: '_id',
+                render: (txt,record,index)=>index + 1
+
             }, {
                 title: '名称',
                 dataIndex: 'name',
@@ -37,6 +41,8 @@ class danwei extends Component {
             }],
             data: [],
             modalAddInfoVisible: false,
+            name: '',
+            remark: '',
         }
     }
 
@@ -48,15 +54,43 @@ class danwei extends Component {
         this.formRef.current.validateFields()
                 .then(values => {
                     this.formRef.current.resetFields();
-                    
+                    this.inseartNewUnit(this)
                     this.setState({modalAddInfoVisible: false});
                 })
                 .catch(info=>{
                   console.log('Validate failed:', info);
                 })
     }
+
+    inseartNewUnit() {
+        const data={}
+        data.name=this.state.name
+        data.remark=this.state.remark
+        inseartUnit(data).then(res=>{
+            const { data } = res
+            localStorage.setItem("auth", data)
+            console.log(data)
+        })
+    }
+
+    handleDelete() {
+        
+    }
+
+
     
     formRef = React.createRef();
+
+    nameInput(e) {
+        this.setState({
+          name: e.target.value,
+        })
+      }
+      remarkInput(e) {
+        this.setState({
+          remark: e.target.value,
+        })
+      }
 
     render() { 
         let data = this.state.data
@@ -96,13 +130,19 @@ class danwei extends Component {
                                 },
                               ]}
                             >
-                            <Input placeholder="请输入"/>
+                            <Input 
+                              placeholder="请输入"
+                              value={this.state.name}
+                              onChange={this.nameInput.bind(this)}/>
                             </FormItem>
                             <FormItem
                               name='danweibeizhu'
                               label='备注 '
                             >
-                            <TextArea rows={4} />
+                            <TextArea 
+                              rows={4}
+                              value={this.state.remark}
+                              onChange={this.remarkInput.bind(this)} />
                             </FormItem>
                         </Form>    
                     </Modal>

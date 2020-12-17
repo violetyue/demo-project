@@ -4,7 +4,7 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import 'antd/dist/antd.css';
 import { UserOutlined, LockOutlined, HomeOutlined } from '@ant-design/icons';
-import { login } from '../../api/index'
+import { getUserInfo, login } from '../../api/index'
 import JsSha from 'jssha';
 
 export const hashPassword = (password) => {
@@ -75,6 +75,9 @@ class Login extends Component {
             localStorage.setItem("auth", data)
             console.log(data)
             this.props.history.push('/admin/homepage')
+        })
+        getUserInfo().then(res=>{
+            console.log(res)
         })
     }
 

@@ -1,7 +1,7 @@
-import logo from './logo.svg';
+
 import './App.css';
-import Reacr, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+
+import { Switch, Route } from 'react-router-dom';
 import { mainRoutes } from './routes/index'
 import Frame from './layout/layout'
 

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import qs from 'qs'
+
 
 axios.defaults.baseURL= "https://api2-feature.blacklake.cn/api/"
 axios.defaults.timeout = 10000;
@@ -80,12 +80,11 @@ export function get(url,data){
     })
 }
 
-
+//用户
 
 export function login(data) {
     return post('user/v1/users/_login',data);
 }
-
 
 export function getUserInfo(data) {
     return get('user/v1/user',data);
@@ -99,24 +98,20 @@ export function addUser(data) {
     return post(`user/v1/users`, data);
 }
 
-// export function addUser(data) {
-//     return request.post(`${baseUrl}/users`, data);
-// }
+//单位
 
-// export function editUser(id: number, params: any) {
-//     return request.patch(`${baseUrl}/users/${id}`, params);
-// }
+export function searchUnit(data) {
+    return post('/v1/unit/_search', data);
+}
 
-// export function changeUserPassword(params, config = {}) {
-//     return request.post(`${baseUrl}/users/_changePassword`, params, config);
-// }
+export function updateUnit(data) {
+    return post('/v1/unit/_update', data);
+}
 
-// // 停用用户
-// export function disabledUser(id: string | number) {
-//     return request.delete(`${baseUrl}/users/${id}/enabled`);
-// }
+export function inseartUnit(data) {
+    return post('/v1/unit/_insert', data)
+}
 
-// // 启用用户
-// export function enabledUser(id: string | number) {
-//     return request.put(`${baseUrl}/users/${id}/enabled`);
-// }
+export function deleteUnit(data) {
+    return deleted('/v1/unit/{id}/_delete', data)
+}
