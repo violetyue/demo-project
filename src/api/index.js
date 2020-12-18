@@ -100,7 +100,7 @@ export function addUser(data) {
 
 //单位
 
-export function getUnitList (data){ 
+export function getUnitList (data) { 
     return post('liteman/v1/unit/_search', data);
 }
 
@@ -112,6 +112,6 @@ export function insertUnit(data) {
     return post('liteman/v1/unit/_insert', data)
 }
 
-export function deleteUnit(id) {
+export const deleteUnit = (id) => {
     return deleted('liteman/v1/unit/${id}/_delete')
 }

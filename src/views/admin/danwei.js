@@ -26,7 +26,7 @@ class danwei extends Component {
                 dataIndex: 'name',
             }, {
                 title: '备注',
-                dataIndex: 'comment'
+                dataIndex: 'remark'
             }, {
                 title: '操作',
                 dataIndex: 'delete',
@@ -34,8 +34,47 @@ class danwei extends Component {
                 render: (text,record,index) => 
                 (
                   <Space>
-                    <a data-index={index}>编辑</a>  
-                    <a data-index={index} onClick={this.handleDelete.bind(this,text,record,index)}>Delete</a>
+                    <a 
+                      data-index={index}
+                      onClick={()=>this.openModalAddInfo("modalAddInfo")}
+                      >编辑</a> 
+                    <Modal 
+                      visible={this.state.modalAddInfoVisible} 
+                      title="创建单位" 
+                      cancelText="取消" 
+                      onCancel={()=>{this.setState({modalAddInfoVisible: false})}}
+                      okText="确定" 
+                      onOk={this.handleCompile}
+                    >
+                        <Form ref={this.formRef} name='input-ref'>
+                            <FormItem 
+                              name='danweiname'
+                              label='名称 '
+                              rules={[
+                                {
+                                  required: true,
+                                  message: '请输入名称',
+                                },
+                              ]}
+                            >
+                            <Input 
+                              value={this.state.name}
+                              onChange={this.nameInput.bind(this)}/>
+                            </FormItem>
+                            <FormItem
+                              name='danweibeizhu'
+                              label='备注 '
+                            >
+                            <TextArea 
+                              rows={4}
+                              value={this.state.remark}
+                              onChange={this.remarkInput.bind(this)} />
+                            </FormItem>
+                        </Form>    
+                    </Modal> 
+                    <a data-index={index} 
+                       onClick={this.handleDelete}
+                    >删除</a>
                   </Space>
                 )
             }],
@@ -43,8 +82,8 @@ class danwei extends Component {
             modalAddInfoVisible: false,
             name: '',
             remark: '',
-            page: 1,
-            size: 10,
+            page: 5,
+            size: 7,
         }
     }
 
@@ -64,22 +103,15 @@ class danwei extends Component {
                 })
     }
 
-    setData() {
-      // const data ={}
-      // data.name=this.state.name
-      // data.remark=this.state.remark
+    setData = () => {
+      
       getUnitList({}).then(res=>
         {
           const { data } = res
           this.setState({data:data})
-          console.log(res)
+          console.log(data)
         })
-      // getUnitList({}).then(res=>{
-      //     console.log(res)
-      //   })
     }
-
-    
 
     insertNewUnit() {
         const data={}
@@ -92,13 +124,36 @@ class danwei extends Component {
         })
     }
 
-    handleDelete = (text,record,index) => {
-        const data={}
-        data.name=this.state.name
-        data.remark=this.state.remark
-        deleteUnit(record.id).then(res=>{
-            const{ data } = res
+    handleCompile=e=> {
+      this.formRef.current.validateFields()
+        .then(values => {
+          this.formRef.current.resetFields();
+          this.compileTheUnit(this)
+          this.setState({modalAddInfoVisible: false});
+        })
+        .catch(info=>{
+        console.log('Validate failed:', info);
+        })
+    }
 
+    compileTheUnit () {
+      const data={}
+      data.id=this.state.data.id
+      data.name=this.state.name
+      data.remark=this.state.remark
+      compileUnit(data).then(res=>{
+        const{ data } = res
+        
+        console.log(data)
+      })
+    }
+
+    handleDelete = () => {
+        const id = this.state.data.id
+        deleteUnit(id).then(res=>{
+            const{ data } = res
+            this.setState({data:data})
+            console.log(data)
         })
     }
 
@@ -176,7 +231,11 @@ class danwei extends Component {
                     </Modal>
                 </div>
                 <div className='danweitable'>
-                    <Table columns={columns} dataSource={data} />
+                    <Table 
+                      columns={columns} 
+                      dataSource={data} 
+                      pagination={{ pageSize: this.state.size }} 
+                      onChange={this.setData}/>
                 </div>
             </div>
         );
