@@ -81,37 +81,59 @@ export function get(url,data){
 }
 
 //用户
-
 export function login(data) {
     return post('user/v1/users/_login',data);
 }
-
 export function getUserInfo(data) {
     return get('user/v1/user',data);
 }
-
-export const getOrgUserList = (params) => {
-    return get(`liteman/v1/user/list`, params);
-};
-
-export function addUser(data) {
-    return post(`user/v1/users`, data);
+export function getUserList(param) {
+    return get(`user/v1/users`, param)
 }
+export function addUser(user) {
+    return post(`user/v1/users`, user);
+}
+// export function editUser(id) {
+//     return patch(`user/v1/users/${id}`)
+// }
+export function blockUser(id) {
+    return deleted(`user/v1/users/${id}/enabled`)
+}
+// export function enableUser(id) {
+//     return put(`user/v1/users/${id}/enabled`)
+// }
+export function changePassword(user) {
+    return post('user/v1/users/_changePassword', user)
+}
+export function getUserRoles(user) {
+    return get('user/v1/roles', user)
+}
+
 
 //单位
-
-export function getUnitList (data) { 
-    return post('liteman/v1/unit/_search', data);
+export function getUnitList (param) { 
+    return post('liteman/v1/unit/_search', param);
+}
+export function compileUnit(unit) {
+    return post('liteman/v1/unit/_update', unit);
+}
+export function insertUnit(unit) {
+    return post('liteman/v1/unit/_insert', unit)
+}
+export function deleteUnit(id) {
+    return deleted(`liteman/v1/unit/${id}/_delete`)
 }
 
-export function compileUnit(data) {
-    return post('liteman/v1/unit/_update', data);
+// 次品项
+export function getinferiorQuality (param) {
+    return post('liteman/v1/defectType/_list', param)
 }
-
-export function insertUnit(data) {
-    return post('liteman/v1/unit/_insert', data)
+export function insertinferiorQuality(quality) {
+    return post('liteman/v1/defectType/_insert', quality)
 }
-
-export const deleteUnit = (id) => {
-    return deleted('liteman/v1/unit/${id}/_delete')
+export function compileferiorQuality(quality) {
+    return post('liteman/v1/defectTypr/_update', quality)
+}
+export function deleteinferiorQuality(id) {
+    return deleted(`liteman/v1/defectType/${id}/_delete`)
 }

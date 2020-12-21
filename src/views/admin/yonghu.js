@@ -6,7 +6,16 @@ import {
     SearchOutlined,
 } from '@ant-design/icons';
 import '../style/style.css'
-import { addUser, getUserInfo } from '../../api/index'
+import { 
+  addUser, 
+  getUserInfo, 
+  getUserList, 
+  editUser, 
+  blockUser, 
+  enableUser, 
+  changePassword, 
+  getUserRoles 
+} from '../../api/index'
 
 const { Option } = Select
 
@@ -17,6 +26,8 @@ class yonghu extends Component {
             columns: [{
                 title: '序号',
                 dataIndex: 'sqno',
+                key: 'id',
+                render: (txt,record,index)=>index + 1
             }, {
                 title: '账号',
                 dataIndex: 'username',
@@ -41,77 +52,159 @@ class yonghu extends Component {
                 key: 'delete',
                 render: (text,record,index) => 
                 (
-                  <Space>
-                    <a data-index={index}>编辑</a>  
-                    <a data-index={index} onClick={this.deleteItem.bind(this,text,record,index)}>Delete</a>
+                  <Space key={index}>
+                    <a 
+                      data-index={index}
+                    >停用</a>  
+                    <a 
+                      data-index={index} 
+                      onClick={()=>{this.setState({editInfo:record,modalAddInfoVisible:true})}}
+                    >编辑</a>
+                    <a 
+                      data-index={index} 
+                      // onClick={}
+                    >重置密码</a>
                   </Space>
                 )
             }],
             data: [],
             modalAddInfoVisible: false,
-            username: '',
-            name: '',
-            phone: '',
-            fake: false,
-            roleIds: [0],
-        }
-    }
-
-    
-    openModalAddInfo = (type)=>{
-        this.setState({modalAddInfoVisible: true})
-    }
-
-    handleOk=e=>{
-        this.formRef.current.validateFields()
-                .then(values => {
-                    this.formRef.current.resetFields();
-                    this.addNewuser(this);
-                    this.setState({modalAddInfoVisible: false});
-                })
-                .catch(info=>{
-                  console.log('Validate failed:', info);
-                })
+            editInfo: {
+              username: '',
+              name: '',
+              fake: false,
+              phone: '',
+              roleIds: [0]
+            },
+            searchInfo: {
+              name:'',
+            },
+            page: {
+              size: 10,
+              page: 1,
+            },
+            total: 0
+          }
     }
 
     componentDidMount() {
-        
+       this.setData()
+    }
+    
+    handleOk = e => {
+      const { editInfo } = this.state
+      if (!editInfo.username) {
+        alert("账号不能为空")
+        return
+      }
+      if (!editInfo.name) {
+        alert("姓名不能为空")
+        return
+      }
+      if (!editInfo.roleIds) {
+        alert("角色不能为空")
+        return
+      }
+      this.updateUser(editInfo)
+    }
+    
+    setData = (newPages={}) => {
+      const {page,size} = newPages
+      const {searchInfo} = this.state
+      const param = {
+          ...searchInfo,
+          page: {
+              page: page || this.state.page.page,
+              size: size || this.state.page.size
+          }   
+      }
+      getUserList(param). then(res=>
+        {
+            const { data, page, size, count } = res
+            this.setState({data, page:{page, size}, total: count}, ()=>
+            {
+              console.log(this.state.page)
+            })
+            console.log(res)
+        })
     }
 
-    
+    onTableChange = (pagination, filters, sorter, extra) => {
+      this.setData({
+          page: pagination.current,
+          pageSize: pagination.pageSize
+      })
+      console.log(pagination, filters, sorter, extra)
+  }
 
-    addNewuser() {
-        const data={}
-        data.username=this.state.username
-        data.name=this.state.name
-        data.phone=this.state.phone
-        data.fake=this.state.fake
-        data.roleIds=this.state.roleIds
-        addUser(data).then(res=>{
-            const { data } = res
-            localStorage.setItem("auth", data)
-            console.log(data)
-        })
-        getUserInfo().then(res=>{
-          console.log(res)
+    onQuery = () => {
+      this.setData({page: 1, size: 10})
+    }
+
+    clearAction() {
+      this.setState({
+          editInfo: {
+              name: '',
+              remark: '',
+          },
+          modalAddInfoVisible: false,
       })
     }
     
-    formRef = React.createRef();
+    updateUser(user) {
+      if (user.id) {
+        // editUser(id).then(res=>{
+        //   this.clearAction()
+        //   this.setData()
+        // })
+      } else {
+        addUser(user).then(res=>{
+          this.clearAction()
+          this.setData()
+        })
+      }
+    }
+
+    handlePassword(user) {
+      
+
+    }
+
+    // addNewuser() {
+    //     const data={}
+    //     data.username=this.state.username
+    //     data.name=this.state.name
+    //     data.phone=this.state.phone
+    //     data.fake=this.state.fake
+    //     data.roleIds=this.state.roleIds
+    //     addUser(data).then(res=>{
+    //         const { data } = res
+    //         localStorage.setItem("auth", data)
+    //         console.log(data)
+    //     })
+    //     getUserInfo().then(res=>{
+    //       console.log(res)
+    //   })
+    // }
+    
+    
 
     usernameInput(e) {
+      const { editInfo } = this.state
       this.setState({
-        username: e.target.value,
+        editInfo: {...editInfo, username: e.target.value},
       })
     }
     nameInput(e) {
+      const { editInfo } = this.state
       this.setState({
-        name: e.target.value,
+        editInfo: {...editInfo, name: e.target.value},
       })
     }
     phoneInput(e) {
+      const { editInfo } = this.state
       this.setState({
-        phone: e.target.value,
+        editInfo: {...editInfo, phone: e.target.value},
       })
     }
     // fakeSelect(e) {
@@ -119,17 +212,28 @@ class yonghu extends Component {
     //     fake: e.target.value,
     //   })
     // }
+    searchnameInput(e) {
+      const { searchInfo } = this.state
+      this.setState({
+        searchInfo: {...searchInfo, name: e.target.value}
+      })
+    }
 
     render() { 
-        let data = this.state.data
-        let columns = this.state.columns
+      const { data, columns, editInfo, searchInfo, modalAddInfoVisible, page, total } = this.state
+      const _pagination = { current: page.page, size: page.size, total}
+      console.log(page, _pagination)
 
         return (
             <div>
                 <div className='searchyonghu'>
                     <div className='searchname'>
                         <label htmlFor='name'>姓名 </label>
-                        <Input placeholder="请输入名称" style={{ width: '85%' }} />
+                        <Input 
+                          value={searchInfo.name}
+                          placeholder="请输入名称" 
+                          style={{ width: '85%' }}
+                          onChange={this.searchnameInput.bind(this)} />
                     </div>
                     <div className='selectstatus'>
                         <label htmlFor='name'>状态 </label>
@@ -139,97 +243,69 @@ class yonghu extends Component {
                             <Option value="stop">停用中</Option>
                         </Select>
                     </div>
-                    <Button type='primary' icon={<SearchOutlined />}>查询</Button>
+                    <Button 
+                      type='primary' 
+                      icon={<SearchOutlined />}
+                      onClick={this.onQuery}
+                    >查询</Button>
                 </div>
                 <div className='createyonghu'>
-                    <Button type='primary' onClick={()=>this.openModalAddInfo("modalAddInfo")} >新增用户</Button>
+                    <Button 
+                      type='primary' 
+                      onClick={()=>this.setState({modalAddInfoVisible: true})} 
+                    >新增用户</Button>
                     <Modal 
-                      visible={this.state.modalAddInfoVisible} 
-                      title="新增用户" 
+                      visible={modalAddInfoVisible} 
+                      title={editInfo.id? "编辑用户":"新建用户"} 
                       cancelText="取消" 
-                      onCancel={()=>{this.setState({modalAddInfoVisible: false})}}
+                      onCancel={()=>{this.clearAction()}}
                       okText="确定" 
                       onOk={this.handleOk}
                     >
-                        <Form ref={this.formRef} name='input-ref'>
-                            <FormItem 
-                              name='yonghuaccount'
-                              label='账号 '
-                              rules={[
-                                {
-                                  required: true,
-                                  message: '请输入账号',
-                                },
-                              ]}
-                            >
+                            <label htmlFor='username'>账号 </label>
                             <Input 
                               placeholder="请填写"
-                              value={this.state.username}
+                              value={editInfo.username}
                               onChange={this.usernameInput.bind(this)} />
-                            </FormItem>
-                            <FormItem
-                              name='yonghuname'
-                              label='姓名 '
-                              rules={[
-                                {
-                                  required: true,
-                                  message: '请输入姓名',
-                                },
-                              ]}
-                            >
+                            <label htmlFor='name'>姓名 </label>
                             <Input 
                               placeholder="请填写"
-                              value={this.state.name}
+                              value={editInfo.name}
                               onChange={this.nameInput.bind(this)}/>
-                            </FormItem>
-                            <FormItem
-                              name='yonghutelephone'
-                              label='手机号 '
-                            >  
+                            <label htmlFor='phone'>手机号 </label>
                             <Input 
                               placeholder="请填写"
-                              value={this.state.phone}
+                              value={editInfo.phone}
                               onChange={this.phoneInput.bind(this)}/>
-                            </FormItem>
-                            <FormItem
-                              name='yonnghurole'
-                              label='角色 '
-                              rules={[
-                                {
-                                  required: true,
-                                  message: '角色不能为空',
-                                },
-                              ]}
-                            >  
+                            <label htmlFor='role'>角色 </label>
                             <Select
                               mode="multiple"
                               allowClear
                               placeholder="请选择"
-                              // value={this.state.roleIds}
+                              value={editInfo.roleIds}
                             >
                                 <Option value="1">轻量-管理员</Option>
                                 <Option value="2">轻量-计划员</Option>
                                 <Option value="3">轻量-生产人员</Option>
                                 <Option value="4">用户账号管理员</Option>
                             </Select>
-                            </FormItem>
-                            <FormItem
-                              name='yonghuvirtual'
-                              label='虚拟用户 '
-                            >  
+                            <label htmlFor='fake'>虚拟用户 </label>
                             <Select 
-                              // value={this.state.fake}
-                              // onChange={this.fakeSelect.bind(this)}
+                               value={editInfo.fake}
                             >
                                 <Option value={true}>是</Option>
                                 <Option value={false}>否</Option>
                             </Select>
-                            </FormItem>
-                        </Form>    
+                               
                     </Modal>
                 </div>
                 <div className='yonghutable'>
-                    <Table columns={columns} dataSource={data} />
+                    <Table 
+                      columns={columns} 
+                      dataSource={data} 
+                      pagination={_pagination} 
+                      onChange={this.onTableChange}
+                    />
                 </div>
             </div>
         );

@@ -73,12 +73,15 @@ class Login extends Component {
         login(data).then(res=>{
             const { data } = res
             localStorage.setItem("auth", data)
+            getUserInfo().then(res=>{
+                const { data } = res
+                localStorage.setItem("userInfo", data)
+                console.log(res)
+            })
             console.log(data)
             this.props.history.push('/admin/homepage')
         })
-        getUserInfo().then(res=>{
-            console.log(res)
-        })
+        
     }
 
     formRef = React.createRef();
