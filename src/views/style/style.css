@@ -56,6 +56,10 @@
     
 }
 
+.createwuliaoinput {
+    padding-bottom: 20px;
+}
+
 .createwuliaobutton,
 .creategongxubutton {
     display: flex;

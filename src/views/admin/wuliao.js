@@ -6,6 +6,7 @@ import {
 } from '@ant-design/icons';
 import '../style/style.css'
 import 'antd/dist/antd.css';
+import {getMaterialList, insertMateriel, updateMateriel, deleteMateriel} from '../../api/index'
 
 class wuliao extends Component {
     constructor(props) {
@@ -14,63 +15,184 @@ class wuliao extends Component {
             columns: [{
                 title: '序号',
                 dataIndex: 'sqno',
+                key: 'id',
+                render: (txt,record,index)=>index + 1
             }, {
                 title: '编号',
-                dataIndex: 'number',
+                dataIndex: 'code',
             }, {
                 title: '名称',
                 dataIndex: 'name',
             }, {
                 title: '规格',
-                dataIndex: 'specs',
+                dataIndex: 'specification',
             }, {
                 title: '单位',
-                dataIndex: 'unit',
+                dataIndex: 'unitId',
             }, {
                 title: '创建时间',
-                dataIndex: 'createtime',
+                dataIndex: 'createdAt',
             }, {
                 title: '创建人',
-                dataIndex: 'createperson',
+                dataIndex: 'creatorName',
             }, {
                 title: '最后更新时间',
-                dataIndex: 'updatetime',
+                dataIndex: 'updateAt',
             }, {
                 title: '操作',
                 dataIndex: 'delete',
                 key: 'delete',
                 render: (text,record,index) => 
                 (
-                  <Space>
-                    <a data-index={index}>编辑</a>  
-                    <a data-index={index} onClick={this.deleteItem.bind(this,text,record,index)}>Delete</a>
+                  <Space key={index}>
+                    <a 
+                      data-index={index}
+                      onClick={()=>{this.props.history.push(`/admin/wuliaocreate/${record.id}`)}}
+                    >编辑</a>  
+                    <a 
+                      data-index={index} 
+                      onClick={()=>{this.handleDelete(record)}}
+                    >删除</a>
                   </Space>
                 )
             }],
             data: [],
+            page: {
+                size: 10,
+                page: 1,
+            },
+            total: 0,
+            info: {
+                code: '',
+                name: '',
+                specification: '',
+                unitId: {},
+                createdAt: '',
+                creatorName: '',
+                updatedAt: '',
+            },
+            searchInfo: {
+                materialCode: '',
+                materialName: '',
+                materialSpecification: '',
+            }
         }
+    }
+
+    componentDidMount() {
+        this.setData()
+    }
+
+
+    setData = (newPages={}) => {
+        const {page,size} = newPages
+        const {searchInfo} = this.state
+        const param = {
+            ...searchInfo,
+                page: page || this.state.page.page,
+                size: size || this.state.page.size
+  
+        }
+        getMaterialList(param). then(res=>
+          {
+              const { data, page, size, count } = res
+              this.setState({data, page:{page, size}, total: count}, ()=>
+              {
+                console.log(this.state.page)
+              })
+              localStorage.setItem('materialInfo', data)
+          })
+    }
+
+    onTableChange = (pagination, filters, sorter, extra) => {
+        this.setData({
+            page: pagination.current,
+            pageSize: pagination.pageSize
+        })
+        console.log(pagination, filters, sorter, extra)
+    }
+
+    onQuery = () => {
+        this.setData({page: 1, size: 10})
+    }
+
+    clearAction() {
+        this.setState({
+            editInfo: {
+                name: '',
+                remark: '',
+            },
+            modalAddInfoVisible: false,
+        })
+    }
+
+    
+
+    handleDelete = (record) => {
+        const id = record.id
+        deleteMateriel(id).then(res=>{
+            this.clearAction()
+            this.setData()
+        })
+    }
+
+
+    searchnameInput(e) {
+        const { searchInfo } = this.state
+        this.setState({
+              searchInfo: {...searchInfo, materialName: e.target.value}
+        })
+    }
+    searchcodeInput(e) {
+        const { searchInfo } = this.state
+        this.setState({
+              searchInfo: {...searchInfo, materialCode: e.target.value}
+        })
+    }
+    searchspecInput(e) {
+        const { searchInfo } = this.state
+        this.setState({
+              searchInfo: {...searchInfo, materialSpecification: e.target.value}
+        })
     }
     
     render() { 
-        let data = this.state.data
-        let columns = this.state.columns
+        const { data, columns, info, editInfo, searchInfo, modalAddInfoVisible, page, total } = this.state
+        const _pagination = { current: page.page, size: page.size, total}
+        console.log(page, _pagination)
 
         return (
             <div>
                 <div className='searchwuliao'>
                     <div className='searchcode'>
                         <label htmlFor='name'>编号 </label>
-                        <Input placeholder="请输入编号" style={{ width: '85%' }} />
+                        <Input 
+                          value={searchInfo.materialCode}
+                          placeholder="请输入编号" 
+                          style={{ width: '85%' }}
+                          onChange={this.searchcodeInput.bind(this)} />
                     </div>
                     <div className='searchname'>
                         <label htmlFor='name'>名称 </label>
-                        <Input placeholder="请输入名称" style={{ width: '85%' }} />
+                        <Input 
+                          value={searchInfo.materialName}
+                          placeholder="请输入名称" 
+                          style={{ width: '85%' }}
+                          onChange={this.searchnameInput.bind(this)} />
                     </div>
                     <div className='searchmodel'>
                         <label htmlFor='name'>规格 </label>
-                        <Input placeholder="请输入规格" style={{ width: '85%' }} />
+                        <Input 
+                          value={searchInfo.materialSpecification}
+                          placeholder="请输入规格" 
+                          style={{ width: '85%' }}
+                          onChange={this.searchspecInput.bind(this)} />
                     </div>
-                    <Button type='primary' icon={<SearchOutlined />}>查询</Button>
+                    <Button 
+                      type='primary' 
+                      icon={<SearchOutlined />}
+                      onClick={this.onQuery}
+                    >查询</Button>
                 </div>
                 <div className='createwuliao'>
                     <Button 
@@ -80,7 +202,11 @@ class wuliao extends Component {
                     >创建物料</Button>
                 </div>
                 <div className='wuliaotable'>
-                    <Table columns={columns} dataSource={data} />
+                    <Table 
+                      columns={columns} 
+                      dataSource={data}
+                      pagination={_pagination}
+                      onChange={this.onTableChange} />
                 </div>
             </div>
         );

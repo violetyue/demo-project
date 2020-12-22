@@ -47,7 +47,7 @@ export const mainRoutes = [
         component: yonghu,
         breadcrumbName: '系统管理 > 用户'
     }, {
-        path: "/admin/wuliaocreate",
+        path: "/admin/wuliaocreate/:id?",
         component: wuliaocreate,
         breadcrumbName: '基础管理 > 物料 > 创建物料'
     }, {

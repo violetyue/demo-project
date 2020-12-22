@@ -16,6 +16,7 @@ import {
   changePassword, 
   getUserRoles 
 } from '../../api/index'
+import Item from 'antd/lib/list/Item';
 
 const { Option } = Select
 
@@ -55,6 +56,12 @@ class yonghu extends Component {
                   <Space key={index}>
                     <a 
                       data-index={index}
+                      onClick={()=>{
+                          blockUser(record.id).then(res=>{
+
+                          })
+                      }
+                    }
                     >停用</a>  
                     <a 
                       data-index={index} 
@@ -74,7 +81,7 @@ class yonghu extends Component {
               name: '',
               fake: false,
               phone: '',
-              roleIds: [0]
+              roles: '',
             },
             searchInfo: {
               name:'',
@@ -83,12 +90,18 @@ class yonghu extends Component {
               size: 10,
               page: 1,
             },
+            selectList: [],
             total: 0
           }
     }
 
-    componentDidMount() {
+    componentDidMount(user) {
        this.setData()
+       getUserRoles(user).then(res=>{
+        const {data} = res
+        this.setState({selectList:data})
+        console.log(this.state.selectList)
+       })
     }
     
     handleOk = e => {
@@ -101,10 +114,10 @@ class yonghu extends Component {
         alert("姓名不能为空")
         return
       }
-      if (!editInfo.roleIds) {
-        alert("角色不能为空")
-        return
-      }
+      // if (!editInfo.roleIds) {
+      //   alert("角色不能为空")
+      //   return
+      // }
       this.updateUser(editInfo)
     }
     
@@ -113,10 +126,8 @@ class yonghu extends Component {
       const {searchInfo} = this.state
       const param = {
           ...searchInfo,
-          page: {
               page: page || this.state.page.page,
-              size: size || this.state.page.size
-          }   
+              size: size || this.state.page.size 
       }
       getUserList(param). then(res=>
         {
@@ -152,43 +163,31 @@ class yonghu extends Component {
     }
     
     updateUser(user) {
-      if (user.id) {
-        // editUser(id).then(res=>{
-        //   this.clearAction()
-        //   this.setData()
-        // })
-      } else {
-        addUser(user).then(res=>{
-          this.clearAction()
-          this.setData()
-        })
-      }
+        
+        if (user.id) {
+          const id = user.id
+          editUser(id).then(res=>{
+            this.clearAction()
+            this.setData()
+          })
+
+        } else {
+          addUser(user).then(res=>{
+            this.clearAction()
+            this.setData()
+          })
+        }
+    
     }
 
-    handlePassword(user) {
-      
-
+    handleChange = (value) => {
+        console.log(value)
+        this.setState({roles:value})
+        console.log(this.state.roles)
+        this.setData()
     }
 
-    // addNewuser() {
-    //     const data={}
-    //     data.username=this.state.username
-    //     data.name=this.state.name
-    //     data.phone=this.state.phone
-    //     data.fake=this.state.fake
-    //     data.roleIds=this.state.roleIds
-    //     addUser(data).then(res=>{
-    //         const { data } = res
-    //         localStorage.setItem("auth", data)
-    //         console.log(data)
-    //     })
-    //     getUserInfo().then(res=>{
-    //       console.log(res)
-    //   })
-    // }
     
-    
-
     usernameInput(e) {
       const { editInfo } = this.state
       this.setState({
@@ -207,11 +206,13 @@ class yonghu extends Component {
         editInfo: {...editInfo, phone: e.target.value},
       })
     }
-    // fakeSelect(e) {
-    //   this.setState({
-    //     fake: e.target.value,
-    //   })
-    // }
+    fakeInput(e){
+        const { editInfo } = this.state
+        this.setState({
+            editInfo: {...editInfo, fake: e},
+        })
+        console.log(e)
+    }
     searchnameInput(e) {
       const { searchInfo } = this.state
       this.setState({
@@ -220,7 +221,7 @@ class yonghu extends Component {
     }
 
     render() { 
-      const { data, columns, editInfo, searchInfo, modalAddInfoVisible, page, total } = this.state
+      const { data, columns, editInfo, selectList, searchInfo, modalAddInfoVisible, page, total } = this.state
       const _pagination = { current: page.page, size: page.size, total}
       console.log(page, _pagination)
 
@@ -279,19 +280,24 @@ class yonghu extends Component {
                               onChange={this.phoneInput.bind(this)}/>
                             <label htmlFor='role'>角色 </label>
                             <Select
+                             
+                              style={{ width: '100%' }}
                               mode="multiple"
                               allowClear
                               placeholder="请选择"
-                              value={editInfo.roleIds}
+                              onChange={this.handleChange}
                             >
-                                <Option value="1">轻量-管理员</Option>
-                                <Option value="2">轻量-计划员</Option>
-                                <Option value="3">轻量-生产人员</Option>
-                                <Option value="4">用户账号管理员</Option>
+                                {selectList.map(item=>{
+                                    return (<Option key={item.id} value={item.id}>
+                                        {item.name}
+                                    </Option>)
+                                })}
                             </Select>
                             <label htmlFor='fake'>虚拟用户 </label>
                             <Select 
+                               style={{ width: '100%' }}
                                value={editInfo.fake}
+                               onChange={this.fakeInput.bind(this)}
                             >
                                 <Option value={true}>是</Option>
                                 <Option value={false}>否</Option>
