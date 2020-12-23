@@ -3,7 +3,7 @@ import { Input, Button, Select, Form } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import 'antd/dist/antd.css';
 import '../style/style.css'
-import {getMaterialList, insertMateriel, updateMateriel, deleteMateriel} from '../../api/index'
+import {getMaterialList, insertMateriel, updateMateriel, deleteMateriel, getMaterialInfo} from '../../api/index'
 
 const { Option } = Select
 
@@ -17,18 +17,38 @@ class wuliaocreate extends Component {
                 name: '',
                 specification: '',
                 unitId: 147,
+                customFieldValues: [],
                 createdAt: '',
                 creatorName: '',
                 updatedAt: '',
-            }
-
+            },
+            createOrEdit: 'create',
         }    
     }
 
+    componentDidMount() {
+        const code = this.props.match.params.code
+        console.log(code)
+        if (code) {
+            this.getData(code)
+            this.setState({createOrEdit: 'edit'})
+        }
+    }
 
+    getData = (code) => {
+        getMaterialInfo({code}).then(res=>{
+            const {data} = res
+            this.setState({
+                editInfo: data
+            })
+            console.log(this.state.editInfo)
+            console.log(this.state.editInfo.unit)
+        })
+        
+    }
 
     handleOk = e => {
-        const { editInfo } = this.state
+        const { editInfo, createOrEdit } = this.state
         console.log(editInfo)
         if (!editInfo.name) {
           alert("名称不能为空")
@@ -38,20 +58,30 @@ class wuliaocreate extends Component {
             alert("编号不能为空")
             return
         }
-        this.createMaterial()
+        if (createOrEdit === 'edit') {
+            
+            this.editMaterial()
+        } else {
+            this.createMaterial()
+        }  
         this.props.history.push("/admin/wuliao")
     }
-    
-    clearAction() {
-        this.setState({
-            editInfo: {
-                name: '',
-                remark: '',
-            },
-            modalAddInfoVisible: false,
+
+    editMaterial() {
+        
+        const data={}
+        data.id=this.state.editInfo.id
+        data.unit=this.state.editInfo.unit
+        data.code=this.state.editInfo.code
+        data.name=this.state.editInfo.name
+        data.unitId=147
+        data.specification=this.state.editInfo.specification
+        data.customFieldValues=this.state.customFieldValues
+        updateMateriel(data).then(res=>{
+            const { data } = res
+            console.log(data)
         })
     }
-
     
     createMaterial() {
         const data={}
@@ -63,6 +93,16 @@ class wuliaocreate extends Component {
             const { data } = res
             localStorage.setItem("createInfo", data)
             console.log(data)
+        })
+    }
+
+    clearAction() {
+        this.setState({
+            editInfo: {
+                name: '',
+                remark: '',
+            },
+            modalAddInfoVisible: false,
         })
     }
 
@@ -92,12 +132,12 @@ class wuliaocreate extends Component {
     }
 
     render() { 
-        const { editInfo } = this.state
+        const { editInfo, createOrEdit } = this.state
 
         return (
             <div className='createwuliaopage'>
                 <div className='createwuliaotitle'>
-                    <span>创建/编辑物料</span>
+                    <span>{createOrEdit === 'create' ? '创建' : '编辑'}物料</span>
                 </div>
                 <div className='createwuliaoarea'>
                     <div className='createwuliaoinput'>  

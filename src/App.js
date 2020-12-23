@@ -1,7 +1,7 @@
 
 import './App.css';
 
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { mainRoutes } from './routes/index'
 import Frame from './layout/layout'
 
@@ -26,7 +26,7 @@ function App() {
               />
             })
           }
-          
+          <Redirect to={mainRoutes[0].path} from="/admin" />
           </Switch>
         </div>
         </Frame>

@@ -19,13 +19,13 @@ export const loginRoutes= [
 
 export const mainRoutes = [
     {
-        path: "/admin/homepage",
-        component: homepage,
-        breadcrumbName: '主页'
-    }, {
         path: "/admin/gongdan",
         component: gongdan,
         breadcrumbName: '生产管理 > 工单'
+    }, {
+        path: "/admin/homepage",
+        component: homepage,
+        breadcrumbName: '主页'
     }, {
         path: "/admin/wuliao",
         component: wuliao,
@@ -47,11 +47,11 @@ export const mainRoutes = [
         component: yonghu,
         breadcrumbName: '系统管理 > 用户'
     }, {
-        path: "/admin/wuliaocreate/:id?",
+        path: "/admin/wuliaocreate/:code?",
         component: wuliaocreate,
         breadcrumbName: '基础管理 > 物料 > 创建物料'
     }, {
-        path: "/admin/gongxucreate",
+        path: "/admin/gongxucreate/:code?",
         component: gongxucreate,
         breadcrumbName: '基础管理 > 工序 > 创建工序'
     }

@@ -26,7 +26,8 @@
 .gongxutable,
 .danweitable,
 .cipintable,
-.yonghutable {
+.yonghutable,
+.projecttable {
     padding: 10px;
     margin: 15px; 
 }

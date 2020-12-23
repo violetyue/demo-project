@@ -81,7 +81,7 @@ class yonghu extends Component {
               name: '',
               fake: false,
               phone: '',
-              roles: '',
+              roleIds: [0],
             },
             searchInfo: {
               name:'',
@@ -114,10 +114,6 @@ class yonghu extends Component {
         alert("姓名不能为空")
         return
       }
-      // if (!editInfo.roleIds) {
-      //   alert("角色不能为空")
-      //   return
-      // }
       this.updateUser(editInfo)
     }
     
@@ -166,7 +162,7 @@ class yonghu extends Component {
         
         if (user.id) {
           const id = user.id
-          editUser(id).then(res=>{
+          editUser(id, user).then(res=>{
             this.clearAction()
             this.setData()
           })
@@ -182,9 +178,12 @@ class yonghu extends Component {
 
     handleChange = (value) => {
         console.log(value)
-        this.setState({roles:value})
-        console.log(this.state.roles)
-        this.setData()
+        const { editInfo } = this.state
+        this.setState({
+          editInfo: {...editInfo, roleIds: value}
+        })
+        console.log('roleIds: ', this.state.editInfo.roleIds)
+        
     }
 
     
@@ -280,7 +279,7 @@ class yonghu extends Component {
                               onChange={this.phoneInput.bind(this)}/>
                             <label htmlFor='role'>角色 </label>
                             <Select
-                             
+                              value={editInfo.roleIds}
                               style={{ width: '100%' }}
                               mode="multiple"
                               allowClear

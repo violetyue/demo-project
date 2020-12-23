@@ -8,7 +8,7 @@ axios.interceptors.response.use(function (response) {
     return response
 }, function (error) {
     const errorString = JSON.stringify(error)
-    const errorData = error.response.sata || {}
+    const errorData = error.response.data || {}
     if (errorString.indexOf('401')>-1){
         console.log('登录失效，请重新登录！')
     }else if (errorString.indexOf('500')>-1){
@@ -129,8 +129,8 @@ export function getUserList(param) {
 export function addUser(user) {
     return post(`user/v1/users`, user);
 }
-export function editUser(id) {
-    return patch(`user/v1/users/${id}`)
+export function editUser(id, param) {
+    return patch(`user/v1/users/${id}`, param)
 }
 export function blockUser(id) {
     return deleted(`user/v1/users/${id}/enabled`)
@@ -186,4 +186,29 @@ export function updateMateriel(data) {
 }
 export function deleteMateriel(id) {
     return deleted(`liteman/v1/material/${id}/_delete`)
+}
+export function getMaterialInfo(data) {
+    return get('liteman/v1/material/_getByCode', data)
+}
+
+// 工序
+export function getProcessList(data) {
+    return post('liteman/v1/processTemplate/_search', data)
+}
+export function addProcess(data) {
+    return post('liteman/v1/processTemplate/_inseart', data)
+}
+export function updateProcess(data) {
+    return put('liteman/v1/processTemplate/_update', data)
+}
+export function deleteProcess(id) {
+    return put(`liteman/v1/processTemplate/${id}/_delete`)
+}
+export function getProcessDetail(params) {
+    return get('liteman/v1/processTemplate/_getByCode', params)
+}
+
+// 工单
+export function getWorkOrderList(params) {
+    return post('liteman/v1/project/_listWeb', params)
 }

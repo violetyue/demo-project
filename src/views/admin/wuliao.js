@@ -47,7 +47,8 @@ class wuliao extends Component {
                   <Space key={index}>
                     <a 
                       data-index={index}
-                      onClick={()=>{this.props.history.push(`/admin/wuliaocreate/${record.id}`)}}
+                    //   onClick={()=>{this.props.history.push(`/admin/wuliaocreate/${record.code}`)}}
+                      onClick={()=>{this.handleEdit(record)}}
                     >编辑</a>  
                     <a 
                       data-index={index} 
@@ -66,7 +67,7 @@ class wuliao extends Component {
                 code: '',
                 name: '',
                 specification: '',
-                unitId: {},
+                unitId: 147,
                 createdAt: '',
                 creatorName: '',
                 updatedAt: '',
@@ -122,11 +123,16 @@ class wuliao extends Component {
                 name: '',
                 remark: '',
             },
-            modalAddInfoVisible: false,
         })
     }
 
-    
+    handleEdit = (record) => {
+        // localStorage.setItem('editMaterialItem', record)
+        console.log(record)
+        // const code = record.code
+        this.props.history.push(`/admin/wuliaocreate/${record.code}`)
+        console.log(record.code)
+    }
 
     handleDelete = (record) => {
         const id = record.id
@@ -157,7 +163,7 @@ class wuliao extends Component {
     }
     
     render() { 
-        const { data, columns, info, editInfo, searchInfo, modalAddInfoVisible, page, total } = this.state
+        const { data, columns, info, editInfo, searchInfo, page, total } = this.state
         const _pagination = { current: page.page, size: page.size, total}
         console.log(page, _pagination)
 
@@ -199,6 +205,7 @@ class wuliao extends Component {
                       type='primary' 
                       icon={<PlusCircleOutlined />}
                       onClick={()=>{this.props.history.push("/admin/wuliaocreate")}}
+                      
                     >创建物料</Button>
                 </div>
                 <div className='wuliaotable'>
