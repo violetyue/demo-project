@@ -124,7 +124,7 @@ export function getUserInfo(data) {
     return get('user/v1/user',data);
 }
 export function getUserList(param) {
-    return get(`user/v1/users`, param)
+    return get(`user/v1/users?`, param)
 }
 export function addUser(user) {
     return post(`user/v1/users`, user);
@@ -196,7 +196,7 @@ export function getProcessList(data) {
     return post('liteman/v1/processTemplate/_search', data)
 }
 export function addProcess(data) {
-    return post('liteman/v1/processTemplate/_inseart', data)
+    return post('liteman/v1/processTemplate/_insert', data)
 }
 export function updateProcess(data) {
     return put('liteman/v1/processTemplate/_update', data)
@@ -204,8 +204,11 @@ export function updateProcess(data) {
 export function deleteProcess(id) {
     return put(`liteman/v1/processTemplate/${id}/_delete`)
 }
-export function getProcessDetail(params) {
-    return get('liteman/v1/processTemplate/_getByCode', params)
+export function getProcessDetail(code) {
+    return get(`liteman/v1/processTemplate/_getByCode?code=${code}`)
+}
+export function getUsersList(param) {
+    return get(`liteman/v1/user/list?page=${1}&size=${1000}`,param)
 }
 
 // 工单

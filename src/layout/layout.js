@@ -50,11 +50,7 @@ function layout(props) {
                     小工单
                 </div>
                 <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline'>
-                    <Menu.Item key='1' icon={<SolutionOutlined />}>
-                        <Link to="/admin/homepage">
-                            主页
-                        </Link>
-                    </Menu.Item>
+                    
                     <SubMenu key='sub1' icon={<LaptopOutlined />} title='生产管理'>
                         <Menu.Item key='2'><Link to="/admin/gongdan">工单</Link></Menu.Item>
                     </SubMenu>

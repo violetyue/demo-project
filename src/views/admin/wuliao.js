@@ -28,7 +28,14 @@ class wuliao extends Component {
                 dataIndex: 'specification',
             }, {
                 title: '单位',
-                dataIndex: 'unitId',
+                dataIndex: 'unit',
+                render:(text,record,index)=>{
+                    const {unit} = record
+                    const names = unit.name
+                    return (
+                        <span>{names}</span>
+                    )
+                }
             }, {
                 title: '创建时间',
                 dataIndex: 'createdAt',
@@ -37,7 +44,7 @@ class wuliao extends Component {
                 dataIndex: 'creatorName',
             }, {
                 title: '最后更新时间',
-                dataIndex: 'updateAt',
+                dataIndex: 'updatedAt',
             }, {
                 title: '操作',
                 dataIndex: 'delete',

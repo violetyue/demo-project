@@ -21,7 +21,7 @@ class gongdan extends Component {
                 dataIndex: 'materialCode',
             }, {
                 title: '产品名称',
-                dataIndex: 'matericalName',
+                dataIndex: 'materialName',
             }, {
                 title: '单位',
                 dataIndex: 'materialUnit',
@@ -66,7 +66,7 @@ class gongdan extends Component {
                 dataIndex: 'action',
                 key: 'action',
                 fixed: 'right',
-                width: 100,
+                width: 125,
                 render: (text,record,index) => 
                 (
                   <Space key={index}>
@@ -108,12 +108,13 @@ class gongdan extends Component {
         getWorkOrderList(param). then(res=>
           {
               console.log('project', res)
-              const { data, project, page, size, count } = res
-              this.setState({data, page:{page, size}, total: count}, ()=>
+              const { data, page, size, count } = res
+              const _data = data.map(item => item.project || {})
+              this.setState({data: _data, page:{page, size}, total: count}, ()=>
               {
                 console.log(this.state.page)
               })
-              
+            
           })
     }
 
@@ -129,7 +130,7 @@ class gongdan extends Component {
                         columns={columns}
                         dataSource={data}
                         pagination={_pagination}
-                        scroll={{ x: 1300 }}
+                        scroll={{ x: 2000 }}
                     />
                 </div>
             </div>

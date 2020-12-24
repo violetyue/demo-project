@@ -1,5 +1,4 @@
 import Login from "../views/login/index";
-import homepage from "../views/admin/homepage";
 import gongdan from "../views/admin/gongdan";
 import wuliao from "../views/admin/wuliao";
 import gongxu from "../views/admin/gongxu";
@@ -22,10 +21,6 @@ export const mainRoutes = [
         path: "/admin/gongdan",
         component: gongdan,
         breadcrumbName: '生产管理 > 工单'
-    }, {
-        path: "/admin/homepage",
-        component: homepage,
-        breadcrumbName: '主页'
     }, {
         path: "/admin/wuliao",
         component: wuliao,

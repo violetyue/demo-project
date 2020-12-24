@@ -31,16 +31,37 @@ class gongxu extends Component {
                 dataIndex: 'name',
             }, {
                 title: '报工权限',
-                dataIndex: 'operators1',
+                dataIndex: 'operators',
+                render:(text,record,index)=>{
+                    const {operators} = record
+                    const names = operators.map(item=>item.nickname).join(",")
+                    return (
+                        <span>{names}</span>
+                    )
+                }
             }, {
                 title: '报工数配比',
                 dataIndex: 'productRate',
             }, {
                 title: '次品项列表',
-                dataIndex: 'defects1',
+                dataIndex: 'defects',
+                render:(text,record,index)=>{
+                    const {defects} = record
+                    const names = defects.map(item=>item.name).join(",")
+                    return (
+                        <span>{names}</span>
+                    )
+                }
             }, {
                 title: '工序采集数据',
-                dataIndex: 'fields1',
+                dataIndex: 'fields',
+                render:(text,record,index)=>{
+                    const {fields} = record
+                    const names = fields.map(item=>item.field).join(",")
+                    return (
+                        <span>{names}</span>
+                    )
+                }
             }, {
                 title: '操作',
                 dataIndex: 'delete',

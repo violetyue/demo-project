@@ -40,13 +40,44 @@ class yonghu extends Component {
                 dataIndex: 'phone',
             }, {
                 title: '角色',
-                dataIndex: 'role',
+                dataIndex: 'roles',
+              //   render:(text,record,index)=>{
+              //     const {roles} = record
+              //     const names = roles.map(item=>item.desc).join(",")
+              //     return (
+              //         <span>{names}</span>
+              //     )
+              // }
             }, {
                 title: '虚拟账户',
                 dataIndex: 'fake',
+                render:(text,record,index)=>{
+                  const {fake} = record
+                  if (fake === true) {
+                    return (
+                      <span>是</span>
+                    )
+                  } else {
+                    return (
+                      <span>否</span>
+                    )
+                  }
+              }
             }, {
                 title: '状态',
-                dataIndex: 'status',
+                dataIndex: 'active',
+                render:(text,record,index)=>{
+                  const {active} = record
+                  if (active === true) {
+                    return (
+                      <span>已启用</span>
+                    )
+                  } else {
+                    return (
+                      <span>已停用</span>
+                    )
+                  }
+              }
             }, {
                 title: '操作',
                 dataIndex: 'delete',
@@ -58,7 +89,6 @@ class yonghu extends Component {
                       data-index={index}
                       onClick={()=>{
                           blockUser(record.id).then(res=>{
-
                           })
                       }
                     }
@@ -69,7 +99,6 @@ class yonghu extends Component {
                     >编辑</a>
                     <a 
                       data-index={index} 
-                      // onClick={}
                     >重置密码</a>
                   </Space>
                 )
@@ -106,6 +135,7 @@ class yonghu extends Component {
     
     handleOk = e => {
       const { editInfo } = this.state
+      console.log('editinfo', editInfo)
       if (!editInfo.username) {
         alert("账号不能为空")
         return
@@ -120,11 +150,14 @@ class yonghu extends Component {
     setData = (newPages={}) => {
       const {page,size} = newPages
       const {searchInfo} = this.state
+      
       const param = {
           ...searchInfo,
-              page: page || this.state.page.page,
-              size: size || this.state.page.size 
+          page: page || this.state.page.page,
+          size: size || this.state.page.size, 
       }
+      param.embed='roles'
+      param.fake='all'
       getUserList(param). then(res=>
         {
             const { data, page, size, count } = res
