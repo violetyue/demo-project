@@ -28,6 +28,29 @@ class gongdan extends Component {
             }, {
                 title: '状态',
                 dataIndex: 'status',
+                render:(text,record,index)=>{
+                    const {status} = record
+                    if (status === 0) {
+                      return (
+                        <span>未开始</span>
+                      )
+                    } 
+                    if (status === 1) {
+                      return (
+                        <span>执行中</span>
+                      )
+                    } 
+                    if (status === 2) {
+                      return (
+                        <span>已结束</span>
+                      )
+                    } 
+                    if (status === 3) {
+                      return (
+                        <span>已取消</span>
+                      )
+                    } 
+                }
             }, {
                 title: '计划开始时间',
                 dataIndex: 'startTimePlanned',

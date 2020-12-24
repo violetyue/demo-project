@@ -74,7 +74,7 @@ class wuliao extends Component {
                 code: '',
                 name: '',
                 specification: '',
-                unitId: 147,
+                unitId: 0,
                 createdAt: '',
                 creatorName: '',
                 updatedAt: '',

@@ -11,7 +11,8 @@ import {
     addProcess,
     updateProcess,
     deleteProcess,
-    getProcessDetail
+    getProcessDetail,
+    
 } from '../../api/index'
 
 class gongxu extends Component {

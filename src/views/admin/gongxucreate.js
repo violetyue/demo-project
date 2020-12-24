@@ -9,7 +9,8 @@ import {
   updateProcess,
   deleteProcess,
   getProcessDetail,
-  getUsersList
+  getUsersList,
+  getinferiorQuality
 } from '../../api/index'
 
 const { Option } = Select
@@ -25,10 +26,12 @@ class gongxucreate extends Component {
                 productRate: 0,
                 fields: [],
                 customFieldValues: [],
-                operators: []
+                operators: [],
+                defects: []
             },
             createOrEdit: 'create',
-            selectList: []
+            selectList: [],
+            selectDefects: []
         }    
     }
     
@@ -44,6 +47,12 @@ class gongxucreate extends Component {
           this.setState({selectList:data})
           console.log(this.state.selectList)
       })
+      getinferiorQuality(param).then(res=>{
+          const {data} = res
+          this.setState({selectDefects:data})
+          console.log('defects', this.state.selectDefects)
+      })
+
     }
 
     getData = (code) => {
@@ -91,6 +100,7 @@ class gongxucreate extends Component {
         data.fields=this.state.fields
         data.customFieldValues=this.state.customFieldValues
         data.operators=this.state.editInfo.operators
+        data.defects=this.state.editInfo.defects
         addProcess(data).then(res=>{
             const { data } = res
             console.log('create', data)
@@ -106,6 +116,7 @@ class gongxucreate extends Component {
         data.fields=this.state.fields
         data.customFieldValues=this.state.customFieldValues
         data.operators=this.state.editInfo.operators
+        data.defects=this.state.editInfo.defects
         updateProcess(data).then(res=>{
             const { data } = res
             console.log('update', data)
@@ -118,7 +129,16 @@ class gongxucreate extends Component {
         this.setState({
             editInfo: {...editInfo, operators: value}
         })
-        console.log('operators', this.state.editInfo.operators)
+        console.log('selectoperators', this.state.editInfo.operators)
+    }
+
+    handleSelect = (value) => {
+        console.log(value)
+        const { editInfo } = this.state
+        this.setState({
+            editInfo: {...editInfo, defects: value}
+        })
+        console.log('selectdefects', this.state.editInfo.defects)
     }
 
     codeInput(e) {
@@ -141,7 +161,7 @@ class gongxucreate extends Component {
     }
 
     render() {
-        const { editInfo, createOrEdit, selectList } = this.state
+        const { editInfo, createOrEdit, selectList, selectDefects } = this.state
 
         return (
             <div className='creategongxupage'>
@@ -186,8 +206,13 @@ class gongxucreate extends Component {
                               mode="multiple"
                               allowClear
                               placeholder="请选择"
-                              style={{ width: '100%' }}>
-                                <Option value="1">1</Option>
+                              style={{ width: '100%' }}
+                              onChange={this.handleSelect}>
+                                {selectDefects.map(item=>{
+                                    return (<Option key={item.id} value={item.id}>
+                                        {item.name}
+                                    </Option>)
+                                })}
                             </Select>
                             
                     </div>
