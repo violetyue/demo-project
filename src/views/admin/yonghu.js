@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Input, Button, Table, Select, Modal, Form, Space } from 'antd';
-import FormItem from 'antd/lib/form/FormItem';
 import 'antd/dist/antd.css';
 import {
     SearchOutlined,
@@ -41,13 +40,13 @@ class yonghu extends Component {
             }, {
                 title: '角色',
                 dataIndex: 'roles',
-              //   render:(text,record,index)=>{
-              //     const {roles} = record
-              //     const names = roles.map(item=>item.desc).join(",")
-              //     return (
-              //         <span>{names}</span>
-              //     )
-              // }
+                render:(text,record,index)=>{
+                  const {roles} = record
+                  const names = roles.map(item=>item.name).join(",")
+                  return (
+                      <span>{names}</span>
+                  )
+              }
             }, {
                 title: '虚拟账户',
                 dataIndex: 'fake',
